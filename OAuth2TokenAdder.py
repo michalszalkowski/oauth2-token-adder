@@ -56,7 +56,7 @@ class BurpExtender(IBurpExtender, ITab, IHttpListener):
         # Add tab
         callbacks.addSuiteTab(self)
         
-        print """-- OAuth2 Token Adder v1.0 --
+        print """-- OAuth2 Token Adder v1.2 --
 Grabs OAuth2 access tokens and adds them to requests as custom headers.
 
 Currently supported auth flows:
@@ -280,7 +280,13 @@ Currently supported auth flows:
             else:
                 
                 # Create headers
-                headers = ["POST %s %s" % (self.path, self.httpVersion), "Host: %s" % (self.host), "Content-Type: application/x-www-form-urlencoded", "Accept: */*", "Connection: close"]
+                headers = [
+                    "POST %s %s" % (self.path, self.httpVersion),
+                    "Host: %s" % (self.host), "Content-Type: application/x-www-form-urlencoded",
+                    "User-Agent:  Burp",
+                    "Accept: */*",
+                    "Connection: close"
+                ]
                 
                 if self.grantType == "Client Credentials":
                     
@@ -484,11 +490,9 @@ Currently supported auth flows:
                 return False
         
         # All grant types
-        if len(self.txtScope.text) <= 0:
-            
-            self.writeLog("No Scope")
-            
-            return False
+        # if len(self.txtScope.text) <= 0:
+        #     self.writeLog("No Scope")
+        #     return False
         
         return grantType
     
